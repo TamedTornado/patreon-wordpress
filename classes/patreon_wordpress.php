@@ -82,7 +82,24 @@ class Patreon_Wordpress {
 		add_action( 'wp_ajax_patreon_wordpress_populate_patreon_level_select', array( $this, 'populate_patreon_level_select_from_ajax' ), 10, 1 );
 		add_action( 'plugin_action_links_' . PATREON_WORDPRESS_PLUGIN_SLUG, array( $this, 'add_plugin_action_links' ), 10, 1 );
 		
+		add_action( 'rest_api_init', array( $this, 'register_post_metadata' ) );
+		
 	}
+
+	public static function register_post_metadata() {
+
+		$args = array(
+			'type' => 'integer',
+			'description' => 'Patreon meta data',
+			'single' => true,
+			'show_in_rest' => true
+		);
+
+		register_meta('post', 'patreon-level', $args);
+		register_meta('post', 'patreon-total-patronage-level', $args);
+	}
+
+
 	public static function getPatreonUser( $user ) {
 
 		if ( self::$current_patreon_user != -1 ) {
